@@ -111,6 +111,12 @@
     + [Chrome 浏览器](https://www.chromedownloads.net/)
     + [Firefox 浏览器](https://ftp.mozilla.org/pub/firefox/releases/)
 
+7. `pointer-events` 属性：
+
+    + 属性值：`auto | none`。
+    + 当属性值为 `auto` 时，DOM 元素正常响应鼠标事件；当属性值为 `none` 时，DOM 元素不响应鼠标事件，此时元素“虚化”，鼠标可以穿透该元素与该元素下方的元素进行交互。
+    + 应用场景：如需要对页面弹窗后的元素进行交互，可以给弹窗或弹窗的遮罩层添加 `pointer-events: none` 属性。
+
 ## JavaScript
 
 1. 巧用 `!!` 运算
@@ -149,4 +155,52 @@
     + 为何不使用 `onkeydown`、`onkeypress`、`onkeyup` 这几个事件呢？因为这个键盘事件监听不了右键菜单中的复制、剪贴和粘贴。
     + `oninput` 是 HTML5 定义的标准事件，可以在内容修改后立即被触发，不想 `onchange` 事件需要失去焦点才触发。`oninput` 事件在 IE9 以下的版本是不支持的，此时需要使用 IE 特有的 `onpropertychange` 事件代替，这个事件在用户界面改变或者使用脚本直接修改内容两种情况下都会触发。
 
-4. `preventDefault()`、`stopPropagation()` 与 `stopImmediatePropagation()`：如果事件是可取消的则可通过 `event.preventDefault()` 方法来取消事件，这意味着属于该事件的默认操作将不会发生，该方法并不会组件事件通过 DOM 进一步传播。倘若需要阻止事件冒泡，则需要通过 `event.stopPropagation()` 方法来实现。`event.stopImmediatePropagation()` 方法用于阻止监听统一事件的其他事件监听器被调用。
+4. `preventDefault()`、`stopPropagation()` 与 `stopImmediatePropagation()`：如果事件是可取消的则可通过 `event.preventDefault()` 方法来取消事件，这意味着属于该事件的默认操作将不会发生，该方法并不会阻止事件通过 DOM 进一步传播。倘若需要阻止事件冒泡，则需要通过 `event.stopPropagation()` 方法来实现。`event.stopImmediatePropagation()` 方法用于阻止监听统一事件的其他事件监听器被调用。
+
+5. 常用正则表达式
+
+    | reg                                                                                           | 说明         |
+    | :-------------------------------------------------------------------------------------------- | :----------- |
+    | `/^\w+[-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/`                                              | 验证邮箱     |
+    | `/^http://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$ ；^[a-zA-z]+://(w+(-w+)*)(.(w+(-w+)*))*(?S*)?$/` | 验证网站 URL |
+    | `/^1[3578]\\d{9}$/`                                                                           | 验证手机号   |
+
+6. 全屏、退出全屏的接口
+
+    + 提醒：不同浏览器存在差异，需要分开处理。
+    + 实例：
+
+      ``` JavaScript
+      /**
+      * 切换全屏状态
+      * @param {Object} el 需要全的 DOM 元素对象
+      * @param {Boolean} isFull 当是否全屏
+      * @returns 改变后的全屏状态标志Boolean
+      */
+      toggleFullScreen(el, isFull) {
+        if (isFull) { // 全屏状态 -> 退出全屏
+          if (el.exitFullScreen) {  // HTML W3C 提议
+            document.exitFullScreen();
+          } else if (el.msExitFullscreen) { // IE11
+            document.msExitFullscreen();
+          } else if (el.webkitRequestFullScreen) {  // Webkit (works in Safari5.1 and Chrome 15)
+            document.webkitCancelFullScreen();
+          } else if (el.mozRequestFullScreen) {  // Firefox (works in nightly)
+            document.mozCancelFullScreen();
+          }
+        } else { // 非全屏状态 -> 全屏状态
+          if (el.requestFullScreen) {
+            el.requestFullScreen();
+          } else if (el.msRequestFullscreen) {
+            el.msRequestFullscreen();
+          } else if (el.webkitRequestFullScreen) {
+            el.webkitRequestFullScreen();
+          } else if (el.mozRequestFullScreen) {
+            el.mozRequestFullScreen();
+          }
+        }
+        return !isFull;
+      },
+      ```
+
+7.
