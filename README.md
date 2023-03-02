@@ -117,6 +117,11 @@
     + 当属性值为 `auto` 时，DOM 元素正常响应鼠标事件；当属性值为 `none` 时，DOM 元素不响应鼠标事件，此时元素“虚化”，鼠标可以穿透该元素与该元素下方的元素进行交互。
     + 应用场景：如需要对页面弹窗后的元素进行交互，可以给弹窗或弹窗的遮罩层添加 `pointer-events: none` 属性。
 
+8. 文字段落首行缩进
+
+    + 属性：`text-indent`。
+    + 如果知道字体大小，而且字体大小是固定的，那可以采用 `px` 作为单位，如字体大小为 `12px` 时，设置 `text-indent: 24px;` 可以达到首行缩进两个字符的效果。但是推荐使用 `em` 单位，`em` 是相对长度，无论字体大小设置多少，采用 `text-indent: 2em;` 都可以实现首行缩进两个字符的效果。
+
 ## JavaScript
 
 1. 巧用 `!!` 运算
@@ -203,4 +208,31 @@
       },
       ```
 
-7.
+7. Symbol()
+
+    + ES6 引入了一种新的原始数据类型 Symbol，表示独一无二的值，最大的用法是用来定义对象的唯一属性名。
+    + 语法 `let a = Symbol('标识')`
+
+8. 数值转换为 RMB 标识方式
+
+     + 思路：先将数字转为字符；利用反转函数，每三位字符加一个 ','最后一位不加；最后再反转回去。
+     + 实现：
+
+        ``` JavaScript
+        // 字符串反转函数
+        function re(str) {
+          return str.split('').reverse().join('');
+        }
+        // 转换函数
+        function trans(num) {
+          const reStr = re(num + '')
+          let temp = '';
+          for (let i = 1; i <= reStr.length; i++) {
+            temp += reStr[i - 1]
+            if (i % 3 == 0 && i != reStr.length) {
+              temp += ','
+            }
+          }
+          return re(temp);
+        }
+        ```
